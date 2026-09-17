@@ -231,6 +231,7 @@ form.addEventListener("submit", async e => {
 
   form.hidden = true;
   $("#done").hidden = false;
+  $("#sign").scrollTop = 0;
   if (sent){
     $("#doneText").textContent = `Thanks, ${d.name.split(" ")[0]}. The signed agreement has been emailed to you at ${d.email} and to Fraser Hawkshaw Media. You can also download it now.`;
   } else {
