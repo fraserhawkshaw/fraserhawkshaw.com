@@ -3,38 +3,60 @@
 // Same web app as the Creative Agreement page: emails the signed PDF to Fraser Hawkshaw Media and the signer (Google Apps Script in Fraser's account)
 const ENDPOINT = "https://script.google.com/macros/s/AKfycbwhaxHabcWoOWHTd0IesyCwdwHe110lHHTCSCA3Kea3gZ72Hzc2cxr3kIcOR3zk25fgVg/exec";
 const DOC_TITLE = "Equipment Liability Acknowledgement";
-const DOC_VERSION = "1.0 (October 2026)";
+const DOC_VERSION = "1.1 (October 2026)";
 const TERMS_VERSION = "Version 2.0, effective 21 October 2026";
 const COMPANY = {name:"Fraser Hawkshaw", role:"Director", company:"Fraser Hawkshaw Media Limited", email:"contact@fraserhawkshaw.com"};
 
 /* ---------- The acknowledgement text (one source: shown on the page and written into the PDF) ---------- */
 const INTRO = [
   "This Equipment Liability Acknowledgement is given under Section 19.1.7 of the Terms and Conditions for Multi-Camera Event Videography Services of Fraser Hawkshaw Media Limited (“the Company”). Words with capital letters, such as Client, Event, Equipment, Venue and Booking, mean what they mean in those Terms and Conditions, which are at fraserhawkshaw.com/terms.",
-  "It applies to the Event and Venue named in the details you enter on this page."
+  "It applies to the Event and Venue named in the details you enter on this page. It should be signed before the Company starts filming."
 ];
-const CLAUSES = [
-  {h:"1. No secure storage", p:[
-    "The Client confirms that a secure, lockable area on site for storing all Equipment when it is not in active use, as required by Section 19.1.1 of the Terms and Conditions, has not been provided for the Event."]},
-  {h:"2. Responsibility for Equipment", p:[
-    "Because a secure, lockable area has not been provided, the Client accepts responsibility for any loss, theft or damage to Equipment on site that arises from that failure, including the reasonable repair or replacement cost up to the Equipment’s total replacement value (Section 19.1.3).",
-    "The Client also remains responsible for loss, theft or damage to Equipment caused by the Client, its representatives, Venue staff, performers, attendees or contractors while the Equipment is on site (Section 19.4).",
-    "The Client is not responsible to the extent a loss is caused by the Company’s own negligence or its failure to take reasonable care of the Equipment (Sections 19.1.5 and 19.4)."]},
-  {h:"3. Ownership and replacement value", p:[
+const STORAGE = {
+  available:   {label: "Secure storage is available", text: "A secure, lockable area has been arranged on site for storing Equipment when it is not in active use (Section 19.1.1)."},
+  unconfirmed: {label: "A storage area has been indicated, but it cannot be confirmed as fully secure", text: "An area has been indicated for storing Equipment, but it cannot be confirmed as fully secure. The Client confirms that verbal assurances that it is adequate are not binding on the Company, and accepts responsibility for the suitability of that area. For the purposes of this Acknowledgement it is treated as an area where a secure, lockable area has not been provided."},
+  none:        {label: "Secure storage is not available", text: "No secure, lockable area has been provided for the Equipment, as required by Section 19.1.1."}
+};
+const HAZARD = {
+  none:        {label: "No hazardous effects", text: "The Event does not include lasers, pyrotechnics or other Hazardous Effects."},
+  disclosed:   {label: "Hazardous effects, disclosed in advance", text: "Hazardous Effects are planned, and the Client disclosed them to the Company in writing before the Event (Section 19.7.1)."},
+  undisclosed: {label: "Hazardous effects, not disclosed in advance", text: "Hazardous Effects are present and were not disclosed to the Company in writing before the Event. The Company may reposition or withdraw Equipment from any area it considers at risk, which is not a failure of service, and the Client is liable as set out in Section 19.7.5."}
+};
+const needsProceed = s => s.storage !== "available" || s.hazard === "undisclosed";
+// sel = {storage, hazard} for the signed PDF; null for the page, which shows every option
+function clauses(sel){
+  const list = [];
+  list.push({h: "Secure storage", p: sel
+    ? [STORAGE[sel.storage].text]
+    : ["The Client confirms which of the following applies, as selected on this page:", ...Object.values(STORAGE).map(o => `${o.label}. ${o.text}`)]});
+  list.push({h: "Responsibility for Equipment", p: [
+    "Where a secure, lockable area has not been provided, or cannot be confirmed as fully secure, the Client accepts responsibility for any loss, theft or damage to Equipment on site that arises from that failure, including the reasonable repair or replacement cost up to the Equipment’s total replacement value (Section 19.1.3).",
+    "In every case the Client remains responsible for loss, theft or damage to Equipment caused by the Client, its representatives, Venue staff, performers, attendees or contractors while the Equipment is on site (Section 19.4).",
+    "The Client is not responsible to the extent a loss is caused by the Company’s own negligence or its failure to take reasonable care of the Equipment (Sections 19.1.5 and 19.4)."]});
+  list.push({h: "Ownership and replacement value", p: [
     "All Equipment remains the property of the Company at all times (Section 19.3). Replacement values are those stated in any equipment schedule the Company has provided (Section 19.1.4). Where no schedule has been provided, the replacement value is the reasonable cost of replacing the item with an equivalent.",
-    "Any sum due under this Acknowledgement will be invoiced and is payable in accordance with Section 5 of the Terms and Conditions."]},
-  {h:"4. Insurance", p:[
-    "The Company’s equipment insurance depends on reasonable security measures being in place (Sections 19.1.2 and 19.8.1). Where a secure, lockable area is not provided, Equipment may not be covered. The Client’s responsibility under this Acknowledgement applies whether or not any insurance responds. The Company will not recover the same loss twice."]},
-  {h:"5. How the Company may work without secure storage", p:[
-    "The Company may reduce unattended Equipment deployment, keep Equipment with its crew, or take other reasonable steps to protect it. This is not a failure of service and does not reduce the fees (Section 19.1.6)."]},
-  {h:"6. Venue and attendees", p:[
-    "The Client will use reasonable efforts to make sure Venue staff, performers and attendees know that recording Equipment must not be moved, touched or interfered with (Sections 19.6.2 and 19.6.8)."]},
-  {h:"7. Authority", p:[
-    "The person signing confirms they are authorised to sign this Acknowledgement on behalf of the Client, and that any End Client has authorised it where relevant. If they were not authorised, they are personally liable as set out in Section 2.8.4 of the Terms and Conditions."]},
-  {h:"8. Relationship to the Terms and Conditions", p:[
-    "Once signed, this Acknowledgement forms part of the Agreement and prevails over the Confirmation Email on equipment liability (Sections 19.1.7 and 31.14). Otherwise the Terms and Conditions apply unchanged. Nothing in it limits any liability that cannot be limited by law (Section 17.0) or the rights of a Consumer (Section 30.7). It is governed by the laws of England and Wales (Section 30)."]},
-  {h:"9. Electronic signature", p:[
-    "By signing, the Client agrees to sign this Acknowledgement electronically. The signed PDF includes a signing record, and a copy is emailed to the Client and to the Company."]}
-];
+    "Any sum due under this Acknowledgement will be invoiced and is payable in accordance with Section 5 of the Terms and Conditions."]});
+  list.push({h: "Insurance", p: [
+    "The Company’s equipment insurance depends on reasonable security measures being in place (Sections 19.1.2 and 19.8.1). Where a secure, lockable area is not provided, Equipment may not be covered. The Client’s responsibility under this Acknowledgement applies whether or not any insurance responds. The Company will not recover the same loss twice."]});
+  list.push({h: "How the Company may work without secure storage", p: [
+    "The Company may reduce unattended Equipment deployment, keep Equipment with its crew, or take other reasonable steps to protect it. This is not a failure of service and does not reduce the fees (Section 19.1.6)."]});
+  list.push({h: "Hazardous effects", p: sel
+    ? [HAZARD[sel.hazard].text]
+    : ["The Client confirms which of the following applies, as selected on this page:", ...Object.values(HAZARD).map(o => `${o.label}. ${o.text}`)]});
+  list.push({h: "Venue and attendees", p: [
+    "The Client will use reasonable efforts to make sure Venue staff, performers and attendees know that recording Equipment must not be moved, touched or interfered with (Sections 19.6.2 and 19.6.8)."]});
+  if (!sel || needsProceed(sel)) list.push({h: "Instruction to proceed", p: [
+    ...(sel ? [] : ["This clause applies, and the instruction box on this page must be ticked, if the Client selects storage that is not available or cannot be confirmed as fully secure, or hazardous effects that were not disclosed in advance."]),
+    "The Client confirms that the risks identified above have been considered and instructs the Company to proceed on that basis. The Client accepts that verbal assurances about storage, safe zones or effects are not binding on the Company, and that this Acknowledgement replaces any such assurance.",
+    "As between the Company and the Client, any loss of or damage to Equipment arising from those risks is the Client’s responsibility, and the Client may recover it from any third party responsible. This does not apply to the extent a loss is caused by the Company’s own negligence or failure to take reasonable care, and it does not limit the Company’s rights under Sections 2.9.5 and 19.5 to pause, move or stop work for safety reasons."]});
+  list.push({h: "Authority", p: [
+    "The person signing confirms they are authorised to sign this Acknowledgement on behalf of the Client, and that any End Client has authorised it where relevant. If they were not authorised, they are personally liable as set out in Section 2.8.4 of the Terms and Conditions."]});
+  list.push({h: "Relationship to the Terms and Conditions", p: [
+    "Once signed, this Acknowledgement forms part of the Agreement and prevails over the Confirmation Email on equipment liability (Sections 19.1.7 and 31.14). Otherwise the Terms and Conditions apply unchanged. Nothing in it limits any liability that cannot be limited by law (Section 17.0) or the rights of a Consumer (Section 30.7). It is governed by the laws of England and Wales (Section 30)."]});
+  list.push({h: "Electronic signature", p: [
+    "By signing, the Client agrees to sign this Acknowledgement electronically. The signed PDF includes a signing record, and a copy is emailed to the Client and to the Company."]});
+  return list.map((c, i) => ({h: `${i + 1}. ${c.h}`, p: c.p}));
+}
 const CONSENT = "The signer confirmed they had read the acknowledgement, were authorised to sign it for the Client, agreed to it and agreed to sign it electronically.";
 
 const $ = s => document.querySelector(s);
@@ -51,7 +73,7 @@ const clean = s => String(s || "").replace(/\s+/g, " ").trim();
   const add = (tag, text) => { const el = document.createElement(tag); el.textContent = text; doc.append(el); };
   add("h2", "Equipment Liability Acknowledgement");
   INTRO.forEach(t => add("p", t));
-  CLAUSES.forEach(c => { add("h2", c.h); c.p.forEach(t => add("p", t)); });
+  clauses(null).forEach(c => { add("h2", c.h); c.p.forEach(t => add("p", t)); });
 })();
 
 // Prefill from a link in the booking email, e.g. ?client=Acme&event=Summer+Fest&date=2026-11-05&venue=The+Dome&name=Jo+Bloggs&role=Producer&email=jo@acme.com
@@ -61,6 +83,16 @@ pre("client", "#fClient", 100); pre("event", "#fEvent", 120); pre("venue", "#fVe
 pre("name", "#fName", 80); pre("role", "#fRole", 60); pre("schedule", "#fSchedule", 120);
 if (/^\d{4}-\d{2}-\d{2}$/.test(q.get("date") || "")) $("#fEventDate").value = q.get("date");
 if (q.get("email") && EMAIL_RE.test(q.get("email"))) $("#fEmail").value = q.get("email").trim();
+const radio = n => { const el = document.querySelector(`input[name="${n}"]:checked`); return el ? el.value : ""; };
+const qs = q.get("storage"), qh = q.get("hazards");
+if (STORAGE[qs]) document.querySelector(`input[name="storage"][value="${qs}"]`).checked = true;
+if (HAZARD[qh]) document.querySelector(`input[name="hazard"][value="${qh}"]`).checked = true;
+function syncProceed(){
+  const s = radio("storage"), h = radio("hazard");
+  $("#proceedBox").hidden = !(s && h && needsProceed({storage: s, hazard: h}));
+}
+document.querySelectorAll('input[name="storage"],input[name="hazard"]').forEach(el => el.addEventListener("change", syncProceed));
+syncProceed();
 
 /* ---------- Signature: draw or type ---------- */
 let mode = "draw", strokes = [], drawing = null;
@@ -146,7 +178,8 @@ const pdfSafe = s => clean(s).replace(/[‘’]/g, "'").replace(/[“”]/g, '"'
 
 async function buildPdf(d){
   const { PDFDocument, StandardFonts, rgb } = PDFLib;
-  const docText = [DOC_TITLE, DOC_VERSION, ...INTRO, ...CLAUSES.flatMap(c => [c.h, ...c.p])].join("\n");
+  const CL = clauses({storage: d.storage, hazard: d.hazard});
+  const docText = [DOC_TITLE, DOC_VERSION, ...INTRO, ...CL.flatMap(c => [c.h, ...c.p])].join("\n");
   const docHash = await sha256Hex(new TextEncoder().encode(docText));
   const pdf = await PDFDocument.create();
   const helv = await pdf.embedFont(StandardFonts.Helvetica);
@@ -192,11 +225,14 @@ async function buildPdf(d){
   kv("Event date", ukDate(d.eventDate));
   kv("Venue", d.venue);
   if (d.schedule) kv("Equipment schedule", d.schedule);
+  kv("Secure storage", STORAGE[d.storage].label);
+  kv("Hazardous effects", HAZARD[d.hazard].label);
+  if (needsProceed(d)) kv("Instruction to proceed", "Given by the Client");
   kv("Signed for the Client by", `${d.name}, ${d.role}`);
   y -= 6;
   page.drawLine({start: {x: M, y: y + 6}, end: {x: PW - M, y: y + 6}, thickness: 0.7, color: rule}); y -= 12;
   INTRO.forEach(t => para(t));
-  for (const c of CLAUSES){ heading(c.h); c.p.forEach(t => para(t)); }
+  for (const c of CL){ heading(c.h); c.p.forEach(t => para(t)); }
 
   // Signature blocks
   need(190);
@@ -231,6 +267,9 @@ async function buildPdf(d){
   line("Document version", `${DOC_VERSION}, given under Terms and Conditions ${TERMS_VERSION}`);
   line("Client", d.client);
   line("Event", `${d.event}, ${ukDate(d.eventDate)}, ${d.venue}`);
+  line("Secure storage", STORAGE[d.storage].label);
+  line("Hazardous effects", HAZARD[d.hazard].label);
+  line("Instruction to proceed", needsProceed(d) ? "Given by the Client" : "Not required");
   line("Signed by", `${d.name}, ${d.role}`);
   line("Email", d.email);
   line("Signed at", `${d.signedAt} (${d.localTime}, ${d.tz})`);
@@ -275,11 +314,15 @@ form.addEventListener("submit", async e => {
   if (!d.event){ $("#fEvent").focus(); return showErr("Enter the event this is for."); }
   if (!d.eventDate){ $("#fEventDate").focus(); return showErr("Enter the event date."); }
   if (!d.venue){ $("#fVenue").focus(); return showErr("Enter the venue."); }
+  d.storage = radio("storage"); d.hazard = radio("hazard");
+  if (!d.storage){ document.querySelector('input[name="storage"]').focus(); return showErr("Choose which secure storage option applies."); }
+  if (!d.hazard){ document.querySelector('input[name="hazard"]').focus(); return showErr("Choose whether lasers, pyrotechnics or other hazardous effects are present."); }
   if (d.name.length < 2){ $("#fName").focus(); return showErr("Enter your full name."); }
   if (!d.role){ $("#fRole").focus(); return showErr("Enter your position."); }
   if (!EMAIL_RE.test(d.email)){ $("#fEmail").focus(); return showErr("Enter a valid email address, so we can send you a copy."); }
   d.sigImg = mode === "draw" ? drawnPng() : await typedPng(d.name);
   if (!d.sigImg) return showErr("Draw your signature in the box, or switch to Type.");
+  if (needsProceed(d) && !$("#fProceed").checked) return showErr("Tick the box to confirm your instruction to proceed.");
   if (!$("#fAgree").checked) return showErr("Tick the box to confirm you’ve read and agree to the acknowledgement.");
   if ($("#fWebsite").value) return;
   if (!window.PDFLib) return showErr("The page didn’t load properly. Refresh and try again.");
@@ -305,7 +348,7 @@ form.addEventListener("submit", async e => {
     const res = await fetch(ENDPOINT, {method: "POST", credentials: "omit", body: JSON.stringify({
       docType: "equipment-liability", docTitle: DOC_TITLE,
       name: d.name, role: d.role, business: d.client, email: d.email, date: d.date, method: d.method,
-      client: d.client, event: d.event, eventDate: d.eventDate, venue: d.venue, schedule: d.schedule,
+      storage: d.storage, hazards: d.hazard, proceed: needsProceed(d), client: d.client, event: d.event, eventDate: d.eventDate, venue: d.venue, schedule: d.schedule,
       signedAt: d.signedAt, localTime: d.localTime, tz: d.tz, ua: d.ua.slice(0, 300), ref: d.ref, docHash: built.docHash,
       page: location.origin + location.pathname, filename: name, pdf: toBase64(built.bytes), website: $("#fWebsite").value
     })});
