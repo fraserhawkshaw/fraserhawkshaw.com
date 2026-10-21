@@ -19,7 +19,7 @@ a{color:var(--accent)}
 [hidden]{display:none!important}
 .grp{border:0;padding:0;margin:0 0 14px;min-width:0}
 .grp legend{font-size:13px;font-weight:600;color:var(--ink);padding:0;margin-bottom:6px}
-.choice{display:flex;gap:10px;align-items:flex-start;border:1px solid #CBD2DE;border-radius:8px;background:#fff;padding:10px 12px;margin-bottom:8px;font-size:14px;line-height:1.4;color:var(--ink);cursor:pointer}
+.choice{display:flex;gap:10px;align-items:center;min-height:84px;border:1px solid #CBD2DE;border-radius:8px;background:#fff;padding:10px 12px;margin-bottom:8px;font-size:14px;line-height:1.4;color:var(--ink);cursor:pointer}
 .choice input{margin:2px 0 0;width:18px;height:18px;flex:none;accent-color:var(--navy)}
 .choice small{display:block;color:var(--muted);font-size:12.5px;margin-top:2px}
 .proceed{background:#fff;border:1px solid #CBD2DE;border-radius:10px;padding:12px 14px;margin:0 0 14px}
@@ -84,7 +84,7 @@ h1{margin:0;color:var(--navy);font-size:clamp(26px,4vw,34px);line-height:1.15;le
 footer{color:var(--muted);font-size:12px;line-height:1.6;padding:18px var(--gut) 0}
 .jump{display:none}
 @media (max-width:960px){.layout{grid-template-columns:minmax(0,1fr)}.sign{position:static;max-height:none;overflow:visible}.jump{display:inline-flex}}
-@media (max-width:640px){.card{padding:22px var(--gut)}.band{padding:18px var(--gut)}.row2{grid-template-columns:1fr}.sign{padding:18px 16px 20px}}
+@media (max-width:640px){.choice{min-height:106px}.card{padding:22px var(--gut)}.band{padding:18px var(--gut)}.row2{grid-template-columns:1fr}.sign{padding:18px 16px 20px}}
 </style>
 </head>
 <body>
@@ -113,13 +113,13 @@ footer{color:var(--muted);font-size:12px;line-height:1.6;padding:18px var(--gut)
           </div>
           <fieldset class="grp"><legend>Secure storage for our equipment</legend>
             <label class="choice"><input type="radio" name="storage" value="available" required><span>Secure storage is available<small>A secure, lockable area has been arranged on site.</small></span></label>
-            <label class="choice"><input type="radio" name="storage" value="unconfirmed"><span>An area has been indicated, but it can’t be confirmed as fully secure<small>For example, someone has said it’s fine but it can’t be checked.</small></span></label>
+            <label class="choice"><input type="radio" name="storage" value="unconfirmed"><span>Storage indicated, but not confirmed as secure<small>For example, someone says it’s fine but it can’t be checked.</small></span></label>
             <label class="choice"><input type="radio" name="storage" value="none"><span>Secure storage is not available<small>No lockable area has been provided.</small></span></label>
           </fieldset>
           <fieldset class="grp"><legend>Lasers, pyrotechnics or other hazardous effects</legend>
-            <label class="choice"><input type="radio" name="hazard" value="none" required><span>None at this event</span></label>
-            <label class="choice"><input type="radio" name="hazard" value="disclosed"><span>Yes, and we told Fraser Hawkshaw Media in writing beforehand</span></label>
-            <label class="choice"><input type="radio" name="hazard" value="undisclosed"><span>Yes, and they were not disclosed beforehand</span></label>
+            <label class="choice"><input type="radio" name="hazard" value="none" required><span>No hazardous effects<small>No lasers, pyrotechnics or similar.</small></span></label>
+            <label class="choice"><input type="radio" name="hazard" value="disclosed"><span>Hazardous effects, disclosed in advance<small>Fraser Hawkshaw Media was told in writing beforehand.</small></span></label>
+            <label class="choice"><input type="radio" name="hazard" value="undisclosed"><span>Hazardous effects, not disclosed in advance<small>They weren’t mentioned to us beforehand.</small></span></label>
           </fieldset>
           <div class="proceed" id="proceedBox" hidden>
             <label class="agree"><input type="checkbox" id="fProceed"><span><strong>I confirm the risks above and instruct Fraser Hawkshaw Media Limited to proceed.</strong> I’ve considered the storage and effects risks identified, I accept that verbal assurances aren’t binding on the Company, and I understand this acknowledgement replaces them.</span></label>
