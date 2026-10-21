@@ -10,7 +10,7 @@ const COMPANY = {name:"Fraser Hawkshaw", role:"Director", company:"Fraser Hawksh
 /* ---------- The acknowledgement text (one source: shown on the page and written into the PDF) ---------- */
 const INTRO = [
   "This Equipment Liability Acknowledgement is given under Section 19.1.7 of the Terms and Conditions for Multi-Camera Event Videography Services of Fraser Hawkshaw Media Limited (“the Company”). Words with capital letters, such as Client, Event, Equipment, Venue and Booking, mean what they mean in those Terms and Conditions, which are at fraserhawkshaw.com/terms.",
-  "It applies to the Event and Venue named in the details you enter on this page. It should be signed before the Company starts filming."
+  "It applies to the Event and location named in the details you enter on this page. It should be signed before the Company starts filming."
 ];
 const STORAGE = {
   available:   {label: "Secure storage is available", text: "A secure, lockable area has been arranged on site for storing Equipment when it is not in active use (Section 19.1.1)."},
@@ -76,10 +76,10 @@ const clean = s => String(s || "").replace(/\s+/g, " ").trim();
   clauses(null).forEach(c => { add("h2", c.h); c.p.forEach(t => add("p", t)); });
 })();
 
-// Prefill from a link in the booking email, e.g. ?client=Acme&event=Summer+Fest&date=2026-11-05&venue=The+Dome&name=Jo+Bloggs&role=Producer&email=jo@acme.com
+// Prefill from a link in the booking email, e.g. ?client=Acme&event=Summer+Fest,+The+Domeevent=Summer+Fest&date=2026-11-05&name=Jo+Bloggs&role=Producer&email=jo@acme.com
 const q = new URLSearchParams(location.search);
 const pre = (key, sel, max) => { const v = clean(q.get(key)).slice(0, max); if (v) $(sel).value = v; };
-pre("client", "#fClient", 100); pre("event", "#fEvent", 120); pre("venue", "#fVenue", 120);
+pre("client", "#fClient", 100); pre("event", "#fEvent", 160);
 pre("name", "#fName", 80); pre("role", "#fRole", 60); pre("schedule", "#fSchedule", 120);
 if (/^\d{4}-\d{2}-\d{2}$/.test(q.get("date") || "")) $("#fEventDate").value = q.get("date");
 if (q.get("email") && EMAIL_RE.test(q.get("email"))) $("#fEmail").value = q.get("email").trim();
@@ -221,9 +221,8 @@ async function buildPdf(d){
   para(`Given under Section 19.1.7 of the Terms and Conditions (${TERMS_VERSION})`, {size: 9.5, color: grey, gap: 14});
   page.drawLine({start: {x: M, y: y + 6}, end: {x: PW - M, y: y + 6}, thickness: 0.7, color: rule}); y -= 8;
   kv("Client", d.client);
-  kv("Event", d.event);
+  kv("Event & location", d.event);
   kv("Event date", ukDate(d.eventDate));
-  kv("Venue", d.venue);
   if (d.schedule) kv("Equipment schedule", d.schedule);
   kv("Secure storage", STORAGE[d.storage].label);
   kv("Hazardous effects", HAZARD[d.hazard].label);
@@ -266,7 +265,7 @@ async function buildPdf(d){
   line("Document reference", d.ref);
   line("Document version", `${DOC_VERSION}, given under Terms and Conditions ${TERMS_VERSION}`);
   line("Client", d.client);
-  line("Event", `${d.event}, ${ukDate(d.eventDate)}, ${d.venue}`);
+  line("Event & location", `${d.event}, ${ukDate(d.eventDate)}`);
   line("Secure storage", STORAGE[d.storage].label);
   line("Hazardous effects", HAZARD[d.hazard].label);
   line("Instruction to proceed", needsProceed(d) ? "Given by the Client" : "Not required");
@@ -306,14 +305,13 @@ form.addEventListener("submit", async e => {
   e.preventDefault();
   showErr("");
   const d = {
-    client: clean($("#fClient").value), event: clean($("#fEvent").value), eventDate: $("#fEventDate").value, venue: clean($("#fVenue").value),
+    client: clean($("#fClient").value), event: clean($("#fEvent").value), eventDate: $("#fEventDate").value,
     schedule: clean($("#fSchedule").value), name: clean($("#fName").value), role: clean($("#fRole").value),
     email: $("#fEmail").value.trim(), date: todayISO(), method: mode
   };
   if (d.client.length < 2){ $("#fClient").focus(); return showErr("Enter the client or company name."); }
-  if (!d.event){ $("#fEvent").focus(); return showErr("Enter the event this is for."); }
+  if (!d.event){ $("#fEvent").focus(); return showErr("Enter the event and where it is."); }
   if (!d.eventDate){ $("#fEventDate").focus(); return showErr("Enter the event date."); }
-  if (!d.venue){ $("#fVenue").focus(); return showErr("Enter the venue."); }
   d.storage = radio("storage"); d.hazard = radio("hazard");
   if (!d.storage){ document.querySelector('input[name="storage"]').focus(); return showErr("Choose which secure storage option applies."); }
   if (!d.hazard){ document.querySelector('input[name="hazard"]').focus(); return showErr("Choose whether lasers, pyrotechnics or other hazardous effects are present."); }
@@ -348,7 +346,7 @@ form.addEventListener("submit", async e => {
     const res = await fetch(ENDPOINT, {method: "POST", credentials: "omit", body: JSON.stringify({
       docType: "equipment-liability", docTitle: DOC_TITLE,
       name: d.name, role: d.role, business: d.client, email: d.email, date: d.date, method: d.method,
-      storage: d.storage, hazards: d.hazard, proceed: needsProceed(d), client: d.client, event: d.event, eventDate: d.eventDate, venue: d.venue, schedule: d.schedule,
+      storage: d.storage, hazards: d.hazard, proceed: needsProceed(d), client: d.client, event: d.event, eventDate: d.eventDate, schedule: d.schedule,
       signedAt: d.signedAt, localTime: d.localTime, tz: d.tz, ua: d.ua.slice(0, 300), ref: d.ref, docHash: built.docHash,
       page: location.origin + location.pathname, filename: name, pdf: toBase64(built.bytes), website: $("#fWebsite").value
     })});
