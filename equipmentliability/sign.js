@@ -4,7 +4,7 @@
 const ENDPOINT = "https://script.google.com/macros/s/AKfycbwhaxHabcWoOWHTd0IesyCwdwHe110lHHTCSCA3Kea3gZ72Hzc2cxr3kIcOR3zk25fgVg/exec";
 const DOC_TITLE = "Equipment Liability Acknowledgement";
 const DOC_VERSION = "1.1 (October 2026)";
-const TERMS_VERSION = "Version 2.0, effective 21 October 2026";
+const TERMS_VERSION = "effective 24 October 2026";
 const COMPANY = {name:"Fraser Hawkshaw", role:"Director", company:"Fraser Hawkshaw Media Limited", email:"contact@fraserhawkshaw.com"};
 
 /* ---------- The acknowledgement text (one source: shown on the page and written into the PDF) ---------- */
