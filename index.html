@@ -77,6 +77,15 @@
   .year{font-size:13px;font-weight:600;padding:28px 0 6px;border-bottom:1px solid var(--rule)}
   .row{display:grid;grid-template-columns:110px minmax(0,1.6fr) minmax(0,1.5fr) minmax(0,1fr);gap:16px;padding:15px 0;border-bottom:1px solid var(--rule);font-size:16px}
   .row .d,.row .v{color:var(--dim)}
+  .more{margin-top:28px}
+  .more summary{display:inline-block;list-style:none;cursor:pointer;font-size:14px;font-weight:500;padding:12px 18px;border:1px solid var(--ink);border-radius:2px}
+  .more summary::-webkit-details-marker{display:none}
+  .more summary:hover{background:var(--ink);color:var(--bg)}
+  .more summary:focus-visible{outline:2px solid var(--hot);outline-offset:3px}
+  .more .less{display:none}
+  .more[open] .less{display:inline}
+  .more[open] .view{display:none}
+  .more[open] summary{margin-bottom:8px}
   .more-link{margin:20px 0 0;font-size:14px;color:var(--dim)}
 
   .about{padding-top:112px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:48px}
@@ -218,6 +227,9 @@
     <div class="row"><span class="d">24 Jan</span><span>Starjunk 95</span><span class="v">HERE at Outernet, London</span><span class="r">Multi-cam director</span></div>
     <div class="row"><span class="d">16 Jan</span><span>Kitty Hall</span><span class="v">Home, Manchester</span><span class="r">Multi-cam director</span></div>
 
+    <details class="more">
+      <summary><span class="view">View more: 2025 and 2024 (69 more)</span><span class="less">Show less</span></summary>
+
     <div class="year">2025</div>
     <div class="row"><span class="d">29 Nov</span><span>KILIMANJARO</span><span class="v">Electric Brixton, London</span><span class="r">Multi-cam director</span></div>
     <div class="row"><span class="d">22 Nov</span><span>Louis Bekk</span><span class="v">HERE at Outernet, London</span><span class="r">Multi-cam director</span></div>
@@ -241,6 +253,56 @@
     <div class="row"><span class="d">18 Apr</span><span>fabric: Maximum &amp; Friends</span><span class="v">fabric, London</span><span class="r">Multi-cam director</span></div>
     <div class="row"><span class="d">22 Mar</span><span>Keyrah</span><span class="v">Jazz Cafe, London</span><span class="r">Multi-cam director</span></div>
     <div class="row"><span class="d">12 Feb</span><span>Justice</span><span class="v">Alexandra Palace, London</span><span class="r">Multi-cam director</span></div>
+
+    <div class="year">2024</div>
+    <div class="row"><span class="d">03 Dec</span><span>Salute</span><span class="v">Electric Brixton, London</span><span class="r">Multi-cam director</span></div>
+    <div class="row"><span class="d">23 Nov</span><span>Pretty Girl</span><span class="v">The Cause, London</span><span class="r">Multi-cam director</span></div>
+    <div class="row"><span class="d">22 Nov</span><span>Stephan Bodzin b2b Massano</span><span class="v">Drumsheds, London</span><span class="r">Multi-cam director</span></div>
+    <div class="row"><span class="d">22 Nov</span><span>ARTBAT</span><span class="v">Drumsheds, London</span><span class="r">Camera operator</span></div>
+    <div class="row"><span class="d">15 Nov</span><span>Dom Dolla</span><span class="v">Drumsheds, London</span><span class="r">Camera operator</span></div>
+    <div class="row"><span class="d">02 Nov</span><span>Konflict Halloween</span><span class="v">Ladbroke Hall, London</span><span class="r">Multi-cam director</span></div>
+    <div class="row"><span class="d">26 Oct</span><span>Adriatique</span><span class="v">E1, London</span><span class="r">Multi-cam director</span></div>
+    <div class="row"><span class="d">12 Oct</span><span>Cloonee</span><span class="v">Roundhouse, London</span><span class="r">Multi-cam director</span></div>
+    <div class="row"><span class="d">05 Oct</span><span>Kungs</span><span class="v">E1, London</span><span class="r">Multi-cam director</span></div>
+    <div class="row"><span class="d">28 Sep</span><span>DJ Mag x Indira Paganotto</span><span class="v">Troxy, London</span><span class="r">Multi-cam director</span></div>
+    <div class="row"><span class="d">28 Sep</span><span>Partiboi69</span><span class="v">HERE at Outernet, London</span><span class="r">Multi-cam director</span></div>
+    <div class="row"><span class="d">27 Sep</span><span>Diplo</span><span class="v">Roundhouse, London</span><span class="r">Multi-cam director</span></div>
+    <div class="row"><span class="d">14 Sep</span><span>Maiden Voyage Festival</span><span class="v">Burgess Park, London</span><span class="r">Camera operator</span></div>
+    <div class="row"><span class="d">13 Sep</span><span>Carlita</span><span class="v">Aldwych Tube Station, London</span><span class="r">Multi-cam director</span></div>
+    <div class="row"><span class="d">24 Aug</span><span>Eastern Electrics Festival</span><span class="v">Lee Valley Showground</span><span class="r">Camera operator</span></div>
+    <div class="row"><span class="d">23 Aug</span><span>NERO</span><span class="v">Corsica Studios, London</span><span class="r">Multi-cam director</span></div>
+    <div class="row"><span class="d">09 Aug</span><span>FISHER</span><span class="v">Gunnersbury Park, London</span><span class="r">Camera operator</span></div>
+    <div class="row"><span class="d">08 Aug</span><span>Bakey</span><span class="v">DJ Mag HQ, London</span><span class="r">Camera operator</span></div>
+    <div class="row"><span class="d">03 Aug</span><span>Fideles</span><span class="v">Family Piknik, Montpellier, France</span><span class="r">Multi-cam director</span></div>
+    <div class="row"><span class="d">02 Aug</span><span>Fideles</span><span class="v">Zamna, Côte d’Azur, France</span><span class="r">Multi-cam director</span></div>
+    <div class="row"><span class="d">26 Jul</span><span>Kölsch</span><span class="v">Junction 2, London</span><span class="r">Multi-cam director</span></div>
+    <div class="row"><span class="d">26 Jul</span><span>Fideles</span><span class="v">Junction 2, London</span><span class="r">Multi-cam director</span></div>
+    <div class="row"><span class="d">26 Jul</span><span>Innellea</span><span class="v">Junction 2, London</span><span class="r">Multi-cam director</span></div>
+    <div class="row"><span class="d">14 Jul</span><span>Jungle</span><span class="v">Tofte Manor, Bedford</span><span class="r">Multi-cam director</span></div>
+    <div class="row"><span class="d">06 Jul</span><span>Michael Bibi</span><span class="v">Finsbury Park, London</span><span class="r">Camera operator</span></div>
+    <div class="row"><span class="d">16 Jun</span><span>Kaz James</span><span class="v">Island, Athens, Greece</span><span class="r">Multi-cam director</span></div>
+    <div class="row"><span class="d">14 Jun</span><span>Mehdi Remadi</span><span class="v">E1, London</span><span class="r">Multi-cam director</span></div>
+    <div class="row"><span class="d">12 Jun</span><span>Kaz James</span><span class="v">Alemagou, Mykonos, Greece</span><span class="r">Multi-cam director</span></div>
+    <div class="row"><span class="d">07 Jun</span><span>Konflict</span><span class="v">The Shard, London</span><span class="r">Multi-cam director</span></div>
+    <div class="row"><span class="d">24 May</span><span>Kungs</span><span class="v">E1, London</span><span class="r">Multi-cam director</span></div>
+    <div class="row"><span class="d">11 May</span><span>Sasha</span><span class="v">Phonox, London</span><span class="r">Multi-cam director</span></div>
+    <div class="row"><span class="d">04 May</span><span>OTTO</span><span class="v">E1, London</span><span class="r">Multi-cam director</span></div>
+    <div class="row"><span class="d">25 Apr</span><span>Black Deer Festival</span><span class="v">The Crypt, London</span><span class="r">Multi-cam director</span></div>
+    <div class="row"><span class="d">24 Apr</span><span>Porij</span><span class="v">Electric Ballroom, London</span><span class="r">Multi-cam director</span></div>
+    <div class="row"><span class="d">12 Apr</span><span>Stephan Bodzin</span><span class="v">Giza Pyramids, Egypt</span><span class="r">Multi-cam director</span></div>
+    <div class="row"><span class="d">17 Mar</span><span>Argy</span><span class="v">HERE at Outernet, London</span><span class="r">Multi-cam director</span></div>
+    <div class="row"><span class="d">15 Mar</span><span>Franky Wah</span><span class="v">York Hall, London</span><span class="r">Multi-cam director</span></div>
+    <div class="row"><span class="d">09 Mar</span><span>Stephan Bodzin</span><span class="v">Drumsheds, London</span><span class="r">Multi-cam director</span></div>
+    <div class="row"><span class="d">09 Mar</span><span>Drumcode</span><span class="v">Drumsheds, London</span><span class="r">Camera operator</span></div>
+    <div class="row"><span class="d">08 Mar</span><span>AZYR (all night long) x Teletech</span><span class="v">Bowlers Exhibition Centre, Manchester</span><span class="r">Multi-cam director</span></div>
+    <div class="row"><span class="d">23 Feb</span><span>Dyen x Free From Sleep</span><span class="v">E1, London</span><span class="r">Multi-cam director</span></div>
+    <div class="row"><span class="d">17 Feb</span><span>COLYN</span><span class="v">HERE at Outernet, London</span><span class="r">Multi-cam director</span></div>
+    <div class="row"><span class="d">10 Feb</span><span>Anfisa Letyago</span><span class="v">E1, London</span><span class="r">Multi-cam director</span></div>
+    <div class="row"><span class="d">09 Feb</span><span>Charlie Sparks</span><span class="v">E1, London</span><span class="r">Multi-cam director</span></div>
+    <div class="row"><span class="d">03 Feb</span><span>WhoMadeWho</span><span class="v">Troxy, London</span><span class="r">Multi-cam director</span></div>
+    <div class="row"><span class="d">02 Feb</span><span>Indo Warehouse</span><span class="v">Earth Hall, London</span><span class="r">Multi-cam director</span></div>
+    <div class="row"><span class="d">26 Jan</span><span>Vendex &amp; Lee Ann Roberts</span><span class="v">E1, London</span><span class="r">Multi-cam director</span></div>
+    </details>
 
     <p class="more-link">Clips on <a href="https://www.instagram.com/fraserhawkshaw/">Instagram</a> and full sets on <a href="https://www.youtube.com/c/fraserhawkshaw">YouTube</a>.</p>
   </section>
