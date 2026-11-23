@@ -78,14 +78,12 @@
   .row{display:grid;grid-template-columns:110px minmax(0,1.6fr) minmax(0,1.5fr) minmax(0,1fr);gap:16px;padding:15px 0;border-bottom:1px solid var(--rule);font-size:16px}
   .row .d,.row .v{color:var(--dim)}
   .more{margin-top:28px}
-  .more summary{display:inline-block;list-style:none;cursor:pointer;font-size:14px;font-weight:500;padding:12px 18px;border:1px solid var(--ink);border-radius:2px}
+  .more summary,.less-btn{display:inline-block;list-style:none;cursor:pointer;font-size:14px;font-weight:500;padding:12px 18px;border:1px solid var(--ink);border-radius:2px}
   .more summary::-webkit-details-marker{display:none}
-  .more summary:hover{background:var(--ink);color:var(--bg)}
-  .more summary:focus-visible{outline:2px solid var(--hot);outline-offset:3px}
-  .more .less{display:none}
-  .more[open] .less{display:inline}
-  .more[open] .view{display:none}
-  .more[open] summary{margin-bottom:8px}
+  .more[open] summary{display:none}
+  .less-btn{font:inherit;font-size:14px;font-weight:500;background:none;color:var(--ink);margin-top:28px}
+  .more summary:hover,.less-btn:hover{background:var(--ink);color:var(--bg)}
+  .more summary:focus-visible,.less-btn:focus-visible{outline:2px solid var(--hot);outline-offset:3px}
   .more-link{margin:20px 0 0;font-size:14px;color:var(--dim)}
 
   .about{padding-top:112px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:48px}
@@ -228,7 +226,7 @@
     <div class="row"><span class="d">16 Jan</span><span>Kitty Hall</span><span class="v">Home, Manchester</span><span class="r">Multi-cam director</span></div>
 
     <details class="more">
-      <summary><span class="view">View more</span><span class="less">Show less</span></summary>
+      <summary>View more</summary>
 
     <div class="year">2025</div>
     <div class="row"><span class="d">29 Nov</span><span>KILIMANJARO</span><span class="v">Electric Brixton, London</span><span class="r">Multi-cam director</span></div>
@@ -302,6 +300,7 @@
     <div class="row"><span class="d">03 Feb</span><span>WhoMadeWho</span><span class="v">Troxy, London</span><span class="r">Multi-cam director</span></div>
     <div class="row"><span class="d">02 Feb</span><span>Indo Warehouse</span><span class="v">Earth Hall, London</span><span class="r">Multi-cam director</span></div>
     <div class="row"><span class="d">26 Jan</span><span>Vendex &amp; Lee Ann Roberts</span><span class="v">E1, London</span><span class="r">Multi-cam director</span></div>
+      <button type="button" class="less-btn">Show less</button>
     </details>
 
     <p class="more-link">Clips on <a href="https://www.instagram.com/fraserhawkshaw/">Instagram</a> and full sets on <a href="https://www.youtube.com/c/fraserhawkshaw">YouTube</a>.</p>
@@ -345,6 +344,15 @@
         buttons.forEach(function(o){ o.querySelector('video').muted = true; o.querySelector('.snd').textContent = 'Sound off'; });
         if (turnOn) { v.muted = false; v.play(); label.textContent = 'Sound on'; }
       });
+    });
+  })();
+  // "Show less" at the bottom of the older credits folds them away and brings the View more button back into view
+  (function(){
+    var d = document.querySelector('details.more'); if (!d) return;
+    d.querySelector('.less-btn').addEventListener('click', function(){
+      d.open = false;
+      d.scrollIntoView({block: 'center'});
+      d.querySelector('summary').focus({preventScroll: true});
     });
   })();
 </script>
